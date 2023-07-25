@@ -7,7 +7,8 @@ const registerUser = async (req, res) => {
 
     const rules = {
         full_name: "required|min:4|max:20",
-        email: "required|email"
+        email: "required|email",
+        password: "required|min:8|max:12"
     };
 
     await isValidator(data, rules, null, async (err, status) => {
