@@ -3,7 +3,7 @@ import Messages from "../utils/messages.js";
 import isValidator from "../utils/validator.js";
 
 const registerUser = async (req, res) => {
-    const data = req.body;
+    const body = req.body;
 
     const rules = {
         full_name: "required|min:4|max:20",
@@ -11,10 +11,10 @@ const registerUser = async (req, res) => {
         password: "required|min:8|max:12"
     };
 
-    await isValidator(data, rules, null, async (err, status) => {
+    await isValidator(body, rules, null, async (err, status) => {
         if (!status) return Messages(res, 412, { ...err, status });
 
-        Messages(res, 200, "Validasi", data);
+        Messages(res, 200, "Validasi", body);
     });
 };
 
