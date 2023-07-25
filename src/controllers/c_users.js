@@ -14,7 +14,13 @@ const registerUser = async (req, res) => {
     await isValidator(body, rules, null, async (err, status) => {
         if (!status) return Messages(res, 412, { ...err, status });
 
-        Messages(res, 200, "Validasi", body);
+        const findByEmail = await ModelUser.findOne({ email: body.email });
+
+        if (findByEmail) return Messages(res, 400, "Email has been register");
+
+        await new ModelUser(body).save();
+
+        Messages(res, 200, "Register Success");
     });
 };
 
