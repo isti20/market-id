@@ -6,7 +6,7 @@ const registerUser = async (req, res) => {
     const data = req.body;
 
     const rules = {
-        name: "required|min:4|max:20",
+        full_name: "required|min:4|max:20",
         email: "required|email"
     };
 
