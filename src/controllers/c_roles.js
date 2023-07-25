@@ -22,7 +22,7 @@ const createRole = async (req, res) => {
             // create role
             await new ModelRoles({ name: inputName }).save();
 
-            Messages(res, 200, "Register success");
+            Messages(res, 201, "Register success");
         })
     } catch (error) {
         Messages(res, 500, error?.Messages | "Internal server error")
