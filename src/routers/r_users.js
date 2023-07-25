@@ -1,8 +1,9 @@
 import express from "express"
-import { allData } from "../controllers/c_users.js"
+import { registerUser, allData } from "../controllers/c_users.js"
 
 const ROUTER = express.Router();
 
+ROUTER.post('/users/new', registerUser);
 ROUTER.get('/users', allData);
 
 export default ROUTER;
