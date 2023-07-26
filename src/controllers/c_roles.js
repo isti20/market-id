@@ -59,4 +59,17 @@ const allRole = async (req, res) => {
     }
 };
 
-export { createRole, allRole };
+const detailRole = async (req, res) => {
+    const _id = req.params._id;
+
+    try {
+        const findData = await ModelRoles.findById({ _id });
+        if (!findData) return Messages(res, 404, "Data not found");
+        
+        Messages(res, 200, "Detail data", findData);
+    } catch (error) {
+        Messages(res, 500, error?.messages | "Internal server error");
+    }
+};
+
+export { createRole, allRole, detailRole };
