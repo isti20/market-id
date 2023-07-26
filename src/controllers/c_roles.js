@@ -65,11 +65,49 @@ const detailRole = async (req, res) => {
     try {
         const findData = await ModelRoles.findById({ _id });
         if (!findData) return Messages(res, 404, "Data not found");
-        
+
         Messages(res, 200, "Detail data", findData);
     } catch (error) {
         Messages(res, 500, error?.messages | "Internal server error");
     }
 };
 
-export { createRole, allRole, detailRole };
+const updateRole = async (req, res) => {
+    const _id = req.params._id;
+    const name = req.body.name;
+
+    const rules = {
+        name: "required|min:4|max:20",
+    };
+
+    try {
+        // data yang mau diupdate
+        const findData = await ModelRoles.findById({ _id });
+        if (!findData) return Messages(res, 404, "Data not found");
+
+        await isValidator({ name }, rules, null, async (err, status) => {
+            if (!status) return Messages(res, 412, { ...err, status });
+            
+            const inputName = name.toLowerCase().trim();
+            const filter = { name: { $regex: inputName, $options: "i" } };
+
+            // pengecekan data dari input
+            const isSameName = await ModelRoles.findOne(filter);
+
+            const currentName = findData._doc.name !== inputName;
+
+            if (isSameName && currentName) return Messages(res, 400, `${inputName} has been register on system`);
+
+            const payload = { name: inputName };
+            const updateData = await ModelRoles.findByIdAndUpdate(_id, payload, {
+                new: true,
+            });
+
+            Messages(res, 200, "Update success", updateData);
+        });
+    } catch (error) {
+        Messages(res, 500, error?.messages | "Internal server error");
+    }
+};
+
+export { createRole, allRole, detailRole, updateRole };
