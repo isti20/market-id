@@ -39,12 +39,43 @@ const registerUser = async (req, res) => {
                 _id: findRole._id,
                 name: findRole.name
             },
-            status: true,
+            status: false,
             token: null,
         }).save();
 
         Messages(res, 200, "Register Success");
     });
+};
+
+const loginUser = async (req, res) => {
+    const body = req.body;
+
+    const rules = {
+        email: "required|email",
+        password: "required|min:8|max:12"
+    };
+    try {
+        await isValidator(body, rules, null, async(err, status) => {
+            if (!status) return Messages(res, 412, { ...err, status });
+
+            const findByEmail = await ModelUser.findOne({ email: body.email })
+            if (!findByEmail) return Messages(res, 400, "Email not register");
+
+            // compare password use bcrypt
+            const isHashPassword = findByEmail.password
+            const comparePassword = bcrypt.compareSync(body.password, isHashPassword);
+
+            if (!comparePassword) return Messages(res, 400, "Wrong password, please check again.")
+
+            // check status account user
+            const isStatus = findByEmail.status;
+            if (!isStatus) return Messages(res, 400, "Your account is being deactivated");
+
+            Messages(res, 200, "Login success");
+        });
+    } catch (error) {
+        Messages(res, 500, error?.messages | "Internal Server Error");
+    };
 };
 
 const allData = async (req, res) => {
@@ -57,4 +88,4 @@ const allData = async (req, res) => {
     }
 };
 
-export { registerUser, allData };
+export { registerUser, loginUser, allData };
