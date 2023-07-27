@@ -4,6 +4,8 @@ import ModelRoles from "../models/m_roles.js";
 import Messages from "../utils/messages.js";
 import isValidator from "../utils/validator.js";
 
+import jwt from "jsonwebtoken";
+import { SECRET_KEY } from "../config/secret.js";
 import bcrypt from "bcrypt";
 
 const registerUser = async (req, res) => {
@@ -54,6 +56,7 @@ const loginUser = async (req, res) => {
         email: "required|email",
         password: "required|min:8|max:12"
     };
+
     try {
         await isValidator(body, rules, null, async(err, status) => {
             if (!status) return Messages(res, 412, { ...err, status });
@@ -71,7 +74,23 @@ const loginUser = async (req, res) => {
             const isStatus = findByEmail.status;
             if (!isStatus) return Messages(res, 400, "Your account is being deactivated");
 
-            Messages(res, 200, "Login success");
+            // variabel id
+            const _id = findByEmail._id
+
+            // encode jwt
+            const payload = {
+                _id: findByEmail._id,
+                role: {
+                    _id: findByEmail.role._id,
+                    name: findByEmail.role.name
+                }
+            };
+
+            const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "2h"});
+
+            await ModelUser.findByIdAndUpdate(_id, { token }, { new: true });
+
+            Messages(res, 200, "Login success", { _id, token, role: { ...findByEmail.role } });
         });
     } catch (error) {
         Messages(res, 500, error?.messages | "Internal Server Error");
