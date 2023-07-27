@@ -97,6 +97,22 @@ const loginUser = async (req, res) => {
     };
 };
 
+const logoutUser = async (req, res) => {
+    const _id = req.params._id
+
+    try {
+        const findData = await ModelUser.findById({_id});
+        if (!findData) return Messages(res, 404, "User not found")
+
+        const payload = { token: null }
+        await ModelUser.findByIdAndUpdate(_id, payload, { new: true });
+
+        Messages(res, 200, "Logout success");
+    } catch (error) {
+        Messages(res, 500, error?.messages | "Internal Server Error");
+    }
+};
+
 const allData = async (req, res) => {
     try {
         const data = await ModelUser.find();
@@ -107,4 +123,4 @@ const allData = async (req, res) => {
     }
 };
 
-export { registerUser, loginUser, allData };
+export { registerUser, loginUser, logoutUser, allData };
