@@ -130,7 +130,15 @@ const allData = async (req, res) => {
         const total = await ModelUser.count(filter);
         const data = await ModelUser.find(filter).sort({ _id: sort_key }).skip(pages).limit(per_page);
 
-        Messages(res, 200, "All data", data, {
+        // delete properti password
+        const newData = data.map((item) => {
+            delete item._doc.password;
+            return {
+                ...item._doc,
+            };
+        });
+
+        Messages(res, 200, "All data", newData, {
             page,
             per_page,
             total
@@ -140,4 +148,18 @@ const allData = async (req, res) => {
     }
 };
 
-export { registerUser, loginUser, logoutUser, allData };
+const detailUser = async (req, res) => {
+    const _id = req.params._id;
+
+    try {
+        const findUser = await ModelUser.findById({ _id });
+        if (!findUser) return Messages(res, 404, "User not found");
+
+        delete findUser._doc.password;
+        Messages(res, 200, "Detail data", findUser);
+    } catch (error) {
+        Messages(res, 500, error?.messages | "Internal Server Error");
+    }
+};
+
+export { registerUser, loginUser, logoutUser, allData, detailUser };
