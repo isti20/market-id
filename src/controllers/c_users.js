@@ -162,4 +162,33 @@ const detailUser = async (req, res) => {
     }
 };
 
-export { registerUser, loginUser, logoutUser, allData, detailUser };
+const updateUser = async (req, res) => {
+    const _id = req.params._id;
+    const body = req.body;
+
+    const rules = {
+        full_name: ["required", "min:4", "max:30"],
+        status: "required|boolean",
+    };
+
+    try {
+        const findUser = await ModelUser.findById({ _id });
+        if (!findUser) return Messages(res, 404, "Data not found");
+
+        await isValidator(body, rules, null, async (err, status) => {
+            if (!status) return Messages(res, 412, { ...err, status });
+
+            const payload = { ...body };
+
+            const updateData = await ModelUser.findByIdAndUpdate(_id, payload, {
+                new: true,
+            });
+
+            Messages(res, 200, "Success", updateData);
+        });
+    } catch (error) {
+        Messages(res, 500, error?.messages | "Internal Server Error");
+    };
+};
+
+export { registerUser, loginUser, logoutUser, allData, detailUser, updateUser };
