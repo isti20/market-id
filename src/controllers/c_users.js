@@ -74,7 +74,7 @@ const loginUser = async (req, res) => {
             const isStatus = findByEmail.status;
             if (!isStatus) return Messages(res, 400, "Your account is being deactivated");
 
-            // variabel id
+            // variabel id user
             const _id = findByEmail._id
 
             // encode jwt
@@ -86,7 +86,7 @@ const loginUser = async (req, res) => {
                 }
             };
 
-            const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "2h"});
+            const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "2h" });
 
             await ModelUser.findByIdAndUpdate(_id, { token }, { new: true });
 
