@@ -114,10 +114,27 @@ const logoutUser = async (req, res) => {
 };
 
 const allData = async (req, res) => {
-    try {
-        const data = await ModelUser.find();
+    const q = req.query.q ? req.query.q : "";
 
-        Messages(res, 200, "Success!", data);
+    const sort_by = req.query.sort_by ? req.query.sort_by.toLowerCase() : "asc";
+    const sort_key = sort_by === "asc" ? 1 : -1;
+
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+    const per_page = req.query.per_page ? parseInt(req.query.per_page) : 25;
+
+    const pages = page === 1 ? 0 : (page - 1) * per_page;
+
+    try {
+        const filter = { full_name: { $regex: q, $options: "i" } };
+
+        const total = await ModelUser.count(filter);
+        const data = await ModelUser.find(filter).sort({ _id: sort_key }).skip(pages).limit(per_page);
+
+        Messages(res, 200, "All data", data, {
+            page,
+            per_page,
+            total
+        });
     } catch (error) {
         Messages(res, 500, error?.messages | "Internal Server Error");
     }
