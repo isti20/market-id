@@ -1,6 +1,7 @@
 import ModelUser from "../models/m_users.js";
 import ModelRoles from "../models/m_roles.js";
 
+import Cloudinary from "../config/cloudinary.js";
 import Messages from "../utils/messages.js";
 import isValidator from "../utils/validator.js";
 
@@ -165,6 +166,7 @@ const detailUser = async (req, res) => {
 const updateUser = async (req, res) => {
     const _id = req.params._id;
     const body = req.body;
+    const file = req.file;
 
     const rules = {
         full_name: ["required", "min:4", "max:30"],
@@ -178,12 +180,32 @@ const updateUser = async (req, res) => {
         await isValidator(body, rules, null, async (err, status) => {
             if (!status) return Messages(res, 412, { ...err, status });
 
-            const payload = { ...body };
+            let payload = {};
+
+            if (file) {
+                const user_image = findUser._doc.image.url;
+                const user_cloudinary_id = findUser._doc.image.cloudinary_id;
+
+                // delete image from cloudinary
+                if (user_image) await Cloudinary.uploader.destroy(user_cloudinary_id);
+
+                // upload new image to cloudinary
+               const result = await Cloudinary.uploader.upload(file.path);
+
+               // assigned data secure_url & public_id to key image
+               payload.image = {
+                url: result.secure_url,
+                cloudinary_id: result.public_id
+               }
+            };
+
+            payload = { ...payload, ...body, full_name: req.body.full_name.trim() };
 
             const updateData = await ModelUser.findByIdAndUpdate(_id, payload, {
                 new: true,
             });
-
+            
+            delete updateData._doc.password;
             Messages(res, 200, "Success", updateData);
         });
     } catch (error) {
