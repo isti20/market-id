@@ -154,4 +154,23 @@ const updateProduct = async (req, res) => {
     };
 };
 
-export { createProduct, allProduct, detailProduct, updateProduct };
+const deleteProduct = async (req, res) => {
+    const _id = req.params._id;
+
+    try {
+        const findProduct = await ModelProducts.findById({ _id });
+        if (!findProduct) return Messages(res, 404, "Data not found");
+
+        const cloudinary_id = findProduct._doc.image.cloudinary_id;
+        cloudinary_id && (await Cloudinary.uploader.destroy(cloudinary_id));
+
+        // delete data in collection
+        await ModelProducts.deleteOne({ _id });
+
+        Messages(res, 200, "Delete data success");
+    } catch (error) {
+        Messages(res, 500, error?.message || "Internal Server Error");
+    }
+};
+
+export { createProduct, allProduct, detailProduct, updateProduct, deleteProduct };
