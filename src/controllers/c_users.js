@@ -102,7 +102,7 @@ const logoutUser = async (req, res) => {
     const _id = req.params._id
 
     try {
-        const findData = await ModelUser.findById({_id});
+        const findData = await ModelUser.findById({ _id });
         if (!findData) return Messages(res, 404, "User not found")
 
         const payload = { token: null }

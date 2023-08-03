@@ -78,4 +78,17 @@ const allProduct = async (req, res) => {
     };
 };
 
-export { createProduct, allProduct };
+const detailProduct = async (req, res) => {
+    const _id = req.params._id;
+
+    try {
+        const findProduct = await ModelProducts.findById({ _id });
+        if (!findProduct) return Messages(res, 404, "Data not found");
+
+        Messages(res, 200, findProduct);
+    } catch (error) {
+        Messages(res, 500, error?.message || "Internal Server Error");
+    }
+};
+
+export { createProduct, allProduct, detailProduct };
