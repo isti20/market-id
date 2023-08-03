@@ -91,4 +91,67 @@ const detailProduct = async (req, res) => {
     }
 };
 
-export { createProduct, allProduct, detailProduct };
+const updateProduct = async (req, res) => {
+    const _id = req.params._id;
+    const body = req.body;
+    const file = req.file;
+
+    const rules = {
+        name: "required|min:4|max:100",
+        price: "required|numeric",
+        category_id: "required|alpha_num",
+    };
+
+    try {
+        const findProduct = await ModelProducts.findById({ _id });
+        if (!findProduct) return Messages(res, 404, "Data not found");
+
+        await isValidator(body, rules, null, async (err, status) => {
+            if (!status) return Messages(res, 412, { ...err, status });
+
+            let payload = {};
+
+            const findCategory = await ModelCategories.findOne({ _id: body.category_id });
+            if (!findCategory) return Messages(res, 404, "Category ID not found");
+
+            if (file) {
+                const product_image = findProduct._doc.image.url;
+                const product_cloudinary_id = findProduct._doc.image.cloudinary_id;
+
+                // delete image from cloudinary
+                if (product_image) await Cloudinary.uploader.destroy(product_cloudinary_id);
+
+                // upload new image to cloudinary
+               const result = await Cloudinary.uploader.upload(file.path);
+
+               // assigned data secure_url & public_id to key image
+               payload.image = {
+                url: result.secure_url,
+                cloudinary_id: result.public_id
+               }
+            };
+
+            payload = { 
+                ...payload, 
+                ...body, 
+                name: body.name.trim(),
+                category: {
+                    _id: findCategory._id,
+                    name: findCategory.name,
+                },
+            };
+
+            const newData = await ModelProducts.findByIdAndUpdate(
+                _id, 
+                { ...payload }, 
+                { new: true }
+            );
+            
+            Messages(res, 200, "Success", newData);
+        });
+    } catch (error) {
+        Messages(res, 500, error?.message || "Internal Server Error");
+    };
+};
+
+export { createProduct, allProduct, detailProduct, updateProduct };
