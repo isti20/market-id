@@ -213,4 +213,25 @@ const updateUser = async (req, res) => {
     };
 };
 
-export { registerUser, loginUser, logoutUser, allData, detailUser, updateUser };
+const deleteUser = async (req, res) => {
+    const _id = req.params._id;
+
+    try {
+        const findUser = await ModelUser.findById({ _id });
+        if (!findUser) return Messages(res, 404, "Data not found");
+
+        const user_image = findUser._doc.image.url;
+        const user_cloudinary_id = findUser._doc.image.user_cloudinary_id;
+
+        // delete image from cloudinary
+        if (user_image) await Cloudinary.uploader.destroy(user_cloudinary_id);
+
+        await ModelUser.deleteOne({ _id });
+
+        Messages(res, 200, "Delete data success");
+    } catch (error) {
+        Messages(res, 500, error?.messages | "Internal Server Error");
+    }
+};
+
+export { registerUser, loginUser, logoutUser, allData, detailUser, updateUser, deleteUser };
