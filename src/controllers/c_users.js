@@ -117,7 +117,7 @@ const logoutUser = async (req, res) => {
 const allData = async (req, res) => {
     const q = req.query.q ? req.query.q : "";
 
-    const sort_by = req.query.sort_by ? req.query.sort_by.toLowerCase() : "asc";
+    const sort_by = req.query.sort_by ? req.query.sort_by.toLowerCase() : "desc";
     const sort_key = sort_by === "asc" ? 1 : -1;
 
     const page = req.query.page ? parseInt(req.query.page) : 1;

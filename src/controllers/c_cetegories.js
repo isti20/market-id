@@ -27,4 +27,27 @@ const createCategory = async (req, res) => {
     });
 };
 
-export { createCategory };
+const allCategory = async (req, res) => {
+    const q = req.query.q ? req.query.q : "";
+
+    const sort_by = req.query.sort_by ? req.query.sort_by.toLowerCase() : "desc";
+    const sort_key = sort_by === "asc" ? 1 : -1;
+
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+    const per_page = req.query.per_page ? parseInt(req.query.per_page) : 25;
+
+    const pages = page === 1 ? 0 : (page - 1) * per_page;
+
+    try {
+        const filter = { name: { $regex: q, $options: "i" } };
+
+        const total = await ModelCategories.count(filter);
+        const data = await ModelCategories.find(filter).sort({ _id: sort_key }).skip(pages).limit(per_page);
+
+        Messages(res, 200, "All data", data, { page, per_page, total });
+    } catch (error) {
+        Messages(res, 500, error?.messages | "Internal server error");
+    };
+};
+
+export { createCategory, allCategory };
