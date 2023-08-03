@@ -63,4 +63,40 @@ const detailCategory = async (req, res) => {
     };
 };
 
-export { createCategory, allCategory, detailCategory };
+const updateCategory = async (req, res) => {
+    const _id = req.params._id
+    const name = req.body.name
+
+    const rules = {
+        name: "required|min:4|max:20",
+    };
+
+    try {
+        const findCategory = await ModelCategories.findById({ _id });
+        if (!findCategory) return Messages(res, 404, "Data not found");
+
+        await isValidator({name}, rules, null, async(err, status) => {
+            if (!status) return Messages(res, 412, { ...err, status });
+
+            const inputName = name.toLowerCase().trim();
+            const filter = { name: { $regex: inputName, $options: "i" } };
+
+            const isSameName = await ModelCategories.findOne(filter);
+            if (isSameName) return Messages(res, 400, `${inputName} has been register on system`);
+
+            const updateData = await ModelCategories.findByIdAndUpdate(
+                _id,
+                { name: inputName },
+                {
+                    new: true,
+                }
+            );
+
+            Messages(res, 200, "Update success", updateData);
+        });
+    } catch (error) {
+        Messages(res, 500, error?.message || "Internal server error");
+    }
+};
+
+export { createCategory, allCategory, detailCategory, updateCategory };
