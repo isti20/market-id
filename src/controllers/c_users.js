@@ -94,7 +94,7 @@ const loginUser = async (req, res) => {
             Messages(res, 200, "Login success", { _id, token, role: { ...findByEmail.role } });
         });
     } catch (error) {
-        Messages(res, 500, error?.messages | "Internal Server Error");
+        Messages(res, 500, error?.message || "Internal Server Error");
     };
 };
 
@@ -110,7 +110,7 @@ const logoutUser = async (req, res) => {
 
         Messages(res, 200, "Logout success");
     } catch (error) {
-        Messages(res, 500, error?.messages | "Internal Server Error");
+        Messages(res, 500, error?.message || "Internal Server Error");
     }
 };
 
@@ -145,7 +145,7 @@ const allData = async (req, res) => {
             total
         });
     } catch (error) {
-        Messages(res, 500, error?.messages | "Internal Server Error");
+        Messages(res, 500, error?.message || "Internal Server Error");
     }
 };
 
@@ -159,7 +159,7 @@ const detailUser = async (req, res) => {
         delete findUser._doc.password;
         Messages(res, 200, "Detail data", findUser);
     } catch (error) {
-        Messages(res, 500, error?.messages | "Internal Server Error");
+        Messages(res, 500, error?.message || "Internal Server Error");
     }
 };
 
@@ -209,7 +209,7 @@ const updateUser = async (req, res) => {
             Messages(res, 200, "Success", updateData);
         });
     } catch (error) {
-        Messages(res, 500, error?.messages | "Internal Server Error");
+        Messages(res, 500, error?.message || "Internal Server Error");
     };
 };
 
@@ -230,7 +230,7 @@ const deleteUser = async (req, res) => {
 
         Messages(res, 200, "Delete data success");
     } catch (error) {
-        Messages(res, 500, error?.messages | "Internal Server Error");
+        Messages(res, 500, error?.message || "Internal Server Error");
     }
 };
 

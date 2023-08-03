@@ -10,21 +10,25 @@ const createCategory = async (req, res) => {
         name: "required|min:4|max:20"
     };
 
-    await isValidator({name}, rules, null, async(err, status) => {
-        if (!status) return Messages(res, 412, { ...err, status });
-
-        const inputName = name.toLowerCase().trim();
-        const filter = { name: { $regex: inputName, $options: "i" } };
-
-        const isSameName = await ModelCategories.findOne(filter);
-        if (isSameName) return Messages(res, 400, `${inputName} has been register on system`);
-
-        await new ModelCategories({
-            name: inputName
-        }).save();
-
-        Messages(res, 201, "Create success");
-    });
+    try {
+        await isValidator({name}, rules, null, async(err, status) => {
+            if (!status) return Messages(res, 412, { ...err, status });
+    
+            const inputName = name.toLowerCase().trim();
+            const filter = { name: { $regex: inputName, $options: "i" } };
+    
+            const isSameName = await ModelCategories.findOne(filter);
+            if (isSameName) return Messages(res, 400, `${inputName} has been register on system`);
+    
+            await new ModelCategories({
+                name: inputName
+            }).save();
+    
+            Messages(res, 201, "Create success");
+        });
+    } catch (error) {
+        Messages(res, 500, error?.message || "Internal server error");
+    }
 };
 
 const allCategory = async (req, res) => {
@@ -46,7 +50,7 @@ const allCategory = async (req, res) => {
 
         Messages(res, 200, "All data", data, { page, per_page, total });
     } catch (error) {
-        Messages(res, 500, error?.messages | "Internal server error");
+        Messages(res, 500, error?.message || "Internal server error");
     };
 };
 

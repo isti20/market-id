@@ -25,7 +25,7 @@ const createRole = async (req, res) => {
             Messages(res, 201, "Create success");
         })
     } catch (error) {
-        Messages(res, 500, error?.Messages | "Internal server error")
+        Messages(res, 500, error?.message || "Internal server error")
     }
 };
 
@@ -55,7 +55,7 @@ const allRole = async (req, res) => {
             total
         });
     } catch (error) {
-        Messages(res, 500, error?.Messages | "Internal server error")
+        Messages(res, 500, error?.message || "Internal server error")
     }
 };
 
@@ -68,7 +68,7 @@ const detailRole = async (req, res) => {
 
         Messages(res, 200, "Detail data", findData);
     } catch (error) {
-        Messages(res, 500, error?.messages | "Internal server error");
+        Messages(res, 500, error?.message || "Internal server error");
     }
 };
 
@@ -106,7 +106,7 @@ const updateRole = async (req, res) => {
             Messages(res, 200, "Update success", updateData);
         });
     } catch (error) {
-        Messages(res, 500, error?.messages | "Internal server error");
+        Messages(res, 500, error?.message || "Internal server error");
     }
 };
 
@@ -121,7 +121,7 @@ const deleteRole = async (req, res) => {
 
         Messages(res, 200, "Delete succes");
     } catch (error) {
-        Messages(res, 500, error?.messages | "Internal server error");
+        Messages(res, 500, error?.message || "Internal server error");
     }
 };
 
