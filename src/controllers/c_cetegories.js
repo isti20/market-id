@@ -50,4 +50,17 @@ const allCategory = async (req, res) => {
     };
 };
 
-export { createCategory, allCategory };
+const detailCategory = async (req, res) => {
+    const _id = req.params._id
+
+    try {
+        const findCategory = await ModelCategories.findById({ _id });
+        if (!findCategory) return Messages(res, 404, "Data not found");
+
+        Messages(res, 200, "Detail data", findCategory);
+    } catch (error) {
+        Messages(res, 500, error?.message || "Internal server error" );
+    };
+};
+
+export { createCategory, allCategory, detailCategory };
