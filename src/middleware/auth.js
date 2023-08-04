@@ -17,9 +17,18 @@ const authentication = (req, res, next) => {
 
             Messages(res, 403, errorMessage);
         }
+        
+        // create custome response for access role
+        res.access = result.role && result.role.name;
 
-       res.access = result.role.name;
-       next();
+        // create custome response for checkout
+        res.checkout_user = {
+            _id: result._id,
+            full_name: result.full_name,
+            email: result.email
+        };
+
+        next();
     });
 };
 

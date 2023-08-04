@@ -84,7 +84,9 @@ const loginUser = async (req, res) => {
                 role: {
                     _id: findByEmail.role._id,
                     name: findByEmail.role.name
-                }
+                },
+                full_name: findByEmail.full_name,
+                email: findByEmail.email,
             };
 
             const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "2h" });
