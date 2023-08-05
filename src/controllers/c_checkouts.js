@@ -139,4 +139,33 @@ const detailCheckout = async (req, res) => {
     };
 };
 
-export { createCheckout, allCheckout, historyCheckout, detailCheckout };
+const confirmCheckout = async (req, res) => {
+    const invoice = req.params.invoice;
+    const status =  req.body.status;
+
+    const rules = {
+        status: "required|boolean"
+    };
+
+    try {
+        const filter = { invoice: { $regex: invoice, $options: "i" }};
+        const findByInvoice = await ModelCheckout.findOne(filter);
+        if (!findByInvoice) return Messages(res, 404, "Data not found");
+
+        await isValidator({ status }, rules, null, async(err, state) => {
+            if (!state) return Messages(res, 412, { ...err, state });
+
+            const data = await ModelCheckout.findOneAndUpdate(
+                filter, 
+                { status }, 
+                { new: true }
+            );
+
+            Messages(res, 200, "Confirmation success", data);
+        });
+    } catch (error) {
+        Messages(res, 500, error?.message || "Internal server error");
+    };
+};
+
+export { createCheckout, allCheckout, historyCheckout, detailCheckout, confirmCheckout };
