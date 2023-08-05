@@ -168,4 +168,21 @@ const confirmCheckout = async (req, res) => {
     };
 };
 
-export { createCheckout, allCheckout, historyCheckout, detailCheckout, confirmCheckout };
+const deleteCheckout = async (req, res) => {
+    const invoice = req.params.invoice;
+
+    try {
+        const filter = { invoice: { $regex: invoice, $options: "i" }};
+        const findByInvoice = await ModelCheckout.findOne(filter);
+
+        if (!findByInvoice) return Messages(res, 404, "Data not found");
+
+        await ModelCheckout.deleteOne(filter);
+
+        Messages(res, 200, "Delete success");
+    } catch (error) {
+        Messages(res, 500, error?.message || "Internal server error");
+    };
+};
+
+export { createCheckout, allCheckout, historyCheckout, detailCheckout, confirmCheckout, deleteCheckout };
