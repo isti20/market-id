@@ -61,11 +61,19 @@ const allCheckout = async (req, res) => {
         const filter = { invoice: { $regex: q, $options: "i" } };
 
         const total = await ModelCheckout.count(filter);
-        const data = await ModelCheckout.find(filter).sort({ _id: sort_key }).skip(pages).limit(per_page);
+        const data = await ModelCheckout.find(filter)
+        .sort({ _id: sort_key })
+        .skip(pages)
+        .limit(per_page);
 
-        const incomes = data.reduce((accumulator, current) => accumulator.total + current.total);
+        const currentTotal = data.map((item) => item.total);
+        let incomes = undefined;
 
-        Messages(res, 200, "All data", {data, incomes }, {
+        if (currentTotal.length) {
+            incomes = currentTotal.reduce((a, b) => a + b);
+        };
+
+        Messages(res, 200, "All data", { incomes, data }, {
             page,
             per_page,
             total
@@ -75,4 +83,46 @@ const allCheckout = async (req, res) => {
     }
 };
 
-export { createCheckout, allCheckout };
+const historyCheckout = async (req, res) => {
+    const _id = req.params._id;
+
+    const q = req.query.q ? req.query.q : "";
+
+    const sort_by = req.query.sort_by ? req.query.sort_by.toLowerCase() : "desc";
+    const sort_key = sort_by === "asc" ? 1 : -1;
+
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+    const per_page = req.query.per_page ? parseInt(req.query.per_page) : 25;
+
+    const pages = page === 1 ? 0 : (page - 1) * per_page;
+
+    try {
+        const filter = { invoice: { $regex: q, $options: "i" } };
+
+        const total = await ModelCheckout.count({
+            $and: [{ "user._id": _id }, filter]
+        });
+
+        const data = await ModelCheckout.find({ $and: [{ "user._id": _id }, filter] })
+        .sort({ _id: sort_key })
+        .skip(pages)
+        .limit(per_page);
+
+        const currentTotal = data.map((item) => item.total);
+        let incomes = undefined;
+
+        if (currentTotal.length) {
+            incomes = currentTotal.reduce((a, b) => a + b);
+        };
+
+        Messages(res, 200, "All data", { incomes, data }, {
+            page,
+            per_page,
+            total
+        });
+    } catch (error) {
+        Messages(res, 500, error?.message || "Internal Server Error");
+    }
+};
+
+export { createCheckout, allCheckout, historyCheckout };
