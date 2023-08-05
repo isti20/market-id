@@ -63,7 +63,9 @@ const allCheckout = async (req, res) => {
         const total = await ModelCheckout.count(filter);
         const data = await ModelCheckout.find(filter).sort({ _id: sort_key }).skip(pages).limit(per_page);
 
-        Messages(res, 200, "All data", data, {
+        const incomes = data.reduce((accumulator, current) => accumulator.total + current.total);
+
+        Messages(res, 200, "All data", {data, incomes }, {
             page,
             per_page,
             total
