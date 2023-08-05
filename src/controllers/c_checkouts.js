@@ -125,4 +125,18 @@ const historyCheckout = async (req, res) => {
     }
 };
 
-export { createCheckout, allCheckout, historyCheckout };
+const detailCheckout = async (req, res) => {
+    const invoice = req.params.invoice;
+
+    try {
+        const filter = { invoice: { $regex: invoice, $options: "i" }};
+        const findByInvoice = await ModelCheckout.findOne(filter);
+        if (!findByInvoice) return Messages(res, 404, "Data not found");
+
+        Messages(res, 200, "Detail data", findByInvoice);
+    } catch (error) {
+        Messages(res, 500, error?.message || "Internal server error");
+    };
+};
+
+export { createCheckout, allCheckout, historyCheckout, detailCheckout };
