@@ -160,4 +160,24 @@ const updateAddress = async (req, res) => {
     };
 };
 
-export { createAddress, allAddress, detailAddress, updateAddress };
+const deleteAddress = async (req, res) => {
+    const _id = req.params._id;
+    const user_id = res.checkout_user._id;
+
+    try {
+        const filter = {
+            $and: [{ user_id }, { _id }]
+        };
+
+        const findAddressByID = await ModelAddress.findOne(filter)
+        if (!findAddressByID) return Messages(res, 404, "Data not found")
+
+        await ModelAddress.deleteOne(filter);
+
+        Messages(res, 200, "Delete success");
+    } catch (error) {
+        Messages(res, 500, error?.message || "Internal server error");
+    };
+};
+
+export { createAddress, allAddress, detailAddress, updateAddress, deleteAddress };
