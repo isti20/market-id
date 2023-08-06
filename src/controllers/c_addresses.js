@@ -106,4 +106,58 @@ const detailAddress = async (req, res) => {
     };
 };
 
-export { createAddress, allAddress, detailAddress };
+const updateAddress = async (req, res) => {
+    const _id = req.params._id;
+    const user_id = res.checkout_user._id;
+    const body = req.body;
+
+    const rules = {
+        name: "required|min:4|max:20",
+        address: "required|min:10|max:255",
+        province: {
+            _id: "required",
+            name: "required"
+        },
+        regency: {
+            _id: "required",
+            name: "required"
+        },
+        district: {
+            _id: "required",
+            name: "required"
+        },
+        village: {
+            _id: "required",
+            name: "required"
+        },
+        passcode: "required|numeric"
+    };
+
+    try {
+        const filter = {
+            $and: [{ user_id }, { _id }]
+        };
+
+        const findAddressByID = await ModelAddress.findOne(filter)
+        if (!findAddressByID) return Messages(res, 404, "Data not found")
+
+        await isValidator(body, rules, null, async(err, status) => {
+            if (!status) return Messages(res, 412, { ...err, status });
+
+            const name = req.body.name.toLowerCase().trim();
+            const address = req.body.address.trim();
+
+            const payload = { ...body, name, address };
+
+            const data = await ModelAddress.findOneAndUpdate(filter, payload, {
+                new: true,
+            });
+
+            Messages(res, 200, "Update success", data);
+        });
+    } catch (error) {
+        Messages(res, 500, error?.message || "Internal server error");
+    };
+};
+
+export { createAddress, allAddress, detailAddress, updateAddress };
