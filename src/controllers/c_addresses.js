@@ -88,4 +88,22 @@ const allAddress = async (req, res) => {
     }
 };
 
-export { createAddress, allAddress };
+const detailAddress = async (req, res) => {
+    const _id = req.params._id;
+    const user_id = res.checkout_user._id;
+
+    try {
+        const filter = {
+            $and: [{ user_id }, { _id }]
+        };
+
+        const findAddressByID = await ModelAddress.findOne(filter)
+        if (!findAddressByID) return Messages(res, 404, "Data not found")
+
+        Messages(res, 200, "Detail data", findAddressByID);
+    } catch (error) {
+        Messages(res, 500, error?.message || "Internal server error");
+    };
+};
+
+export { createAddress, allAddress, detailAddress };
