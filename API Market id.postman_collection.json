@@ -1,0 +1,1152 @@
+{
+	"info": {
+		"_postman_id": "5a816d36-3e45-4d7a-9e01-3cee00b82621",
+		"name": "API Market id",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "27509795"
+	},
+	"item": [
+		{
+			"name": "USERS",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"full_name\": \"putri\",\r\n    \"email\": \"putri@gmail.com\",\r\n    \"password\": \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3001/api/v1/users/new"
+					},
+					"response": []
+				},
+				{
+					"name": "All Data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3001/api/v1/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"const token = responseJson?.data?.token\r",
+									"\r",
+									"if (token) pm.globals.set(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"isti@gmail.com\",\r\n    \"password\": \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3001/api/v1/users/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"token\", \"\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/v1/users/:_id/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":_id",
+								"logout"
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": "64db02515daf7935952c06e1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Detail",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/v1/users/:_id/detail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":_id",
+								"detail"
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": "64c0f61ad6b03dd085d43a1e"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"full_name\": \"putri\",\r\n    \"status\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/v1/users/:_id/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":_id",
+								"update"
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": "64cf23a6ba7ece3eb7fedaf6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/v1/users/:_id/destroy",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":_id",
+								"destroy"
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": "64c1008439a7ddf512122792"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ROLES",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"new customer\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3001/api/v1/role/new"
+					},
+					"response": []
+				},
+				{
+					"name": "All",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/v1/role/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"role",
+								"all"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "a",
+									"description": "search by name",
+									"disabled": true
+								},
+								{
+									"key": "sort_by",
+									"value": "desc",
+									"description": "asc/desc",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Detail",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/v1/role/:_id/detail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"role",
+								":_id",
+								"detail"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": "64c012e2b7035c8a18bb9bd1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"old customer\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/v1/role/:_id/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"role",
+								":_id",
+								"update"
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": "64c0a776e47cf3c1404e2a6f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/v1/role/:_id/destroy",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"role",
+								":_id",
+								"destroy"
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": "64c0bdc1191b10fe179209efxxxxx"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CATEGORIES",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"accessories\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3001/api/v1/categories/new"
+					},
+					"response": []
+				},
+				{
+					"name": "All data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3001/api/v1/categories"
+					},
+					"response": []
+				},
+				{
+					"name": "Detail",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/v1/categories/:_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								":_id"
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": "64cb011ee6640a4df72a7922"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"accessories\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/v1/categories/:_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								":_id"
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": "64cb011ee6640a4df72a7922"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/v1/categories/:_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								":_id"
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": "64cb00e4e6640a4df72a791e"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PRODUCTS",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Cincin",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "800000",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "64cb011ee6640a4df72a7922",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/iisis/Downloads/Cincin.jpg"
+								}
+							]
+						},
+						"url": "http://localhost:3001/api/v1/products/new"
+					},
+					"response": []
+				},
+				{
+					"name": "All Data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3001/api/v1/products"
+					},
+					"response": []
+				},
+				{
+					"name": "Detail",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/v1/products/:_id/detail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"products",
+								":_id",
+								"detail"
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": "64cbad197cc2e541559b6f34"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Anting",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "60000",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "64cb011ee6640a4df72a7922",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/iisis/Downloads/anting.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/v1/products/:_id/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"products",
+								":_id",
+								"update"
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": "64cbad197cc2e541559b6f34"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/v1/products/:_id/destroy",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"products",
+								":_id",
+								"destroy"
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": "64cbe858f785d3b221a37c72"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CHECKOUTS",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cart\": [\r\n        {\r\n            \"name\": \"Anting\",\r\n            \"price\": 60000,\r\n            \"image\": {\r\n                \"url\": \"https://res.cloudinary.com/draimz3uz/image/upload/v1691093423/ulamz0rbe6ndozkysx1w.jpg\",\r\n                \"cloudinary_id\": \"ulamz0rbe6ndozkysx1w\"\r\n            },\r\n            \"category\": {\r\n                \"_id\": \"64cb011ee6640a4df72a7922\",\r\n                \"name\": \"accessories\"\r\n            },\r\n            \"qty\": 2,\r\n            \"sub_total\": 120000\r\n        },\r\n        {\r\n            \"name\": \"Ishana Pants\",\r\n            \"price\": 539000,\r\n            \"image\": {\r\n                \"url\": \"https://res.cloudinary.com/draimz3uz/image/upload/v1691041302/dnz5i5emptrmlotv6qqh.webp\",\r\n                \"cloudinary_id\": \"dnz5i5emptrmlotv6qqh\"\r\n            },\r\n            \"category\": {\r\n                \"_id\": \"64cb0084e6640a4df72a791a\",\r\n                \"name\": \"pants\"\r\n            },\r\n            \"qty\": 1,\r\n            \"sub_total\": 539000\r\n        }\r\n    ],\r\n    \"address\": {\r\n        \"_id\": 123,\r\n        \"name\": \"Test2\"\r\n    },\r\n    \"total\": 724900\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3001/api/v1/checkout/new"
+					},
+					"response": []
+				},
+				{
+					"name": "List",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": "http://localhost:3001/api/v1/checkout/list"
+					},
+					"response": []
+				},
+				{
+					"name": "History",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/v1/checkout/:_id/history",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"checkout",
+								":_id",
+								"history"
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": "64c0f61ad6b03dd085d43a1e"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Detail",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/v1/checkout/:invoice/detail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"checkout",
+								":invoice",
+								"detail"
+							],
+							"variable": [
+								{
+									"key": "invoice",
+									"value": "INVOICE1691168044582"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/v1/checkout/:invoice/confirm",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"checkout",
+								":invoice",
+								"confirm"
+							],
+							"variable": [
+								{
+									"key": "invoice",
+									"value": "INVOICE1691168044582"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/v1/checkout/:invoice/destroy",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"checkout",
+								":invoice",
+								"destroy"
+							],
+							"variable": [
+								{
+									"key": "invoice",
+									"value": "INVOICE1691168044582"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ADDRESSES",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"KOST\",\r\n    \"address\": \"Jl. Test2 No. 2 RT.001 RW.003\",\r\n    \"province\": {\r\n        \"_id\": \"34\",\r\n        \"name\": \"DI YOGYAKARTA\"\r\n    },\r\n    \"regency\": {\r\n        \"_id\": \"3404\",\r\n        \"name\": \"KABUPATEN SLEMAN\"\r\n    },\r\n    \"district\": {\r\n        \"_id\": \"3404050\",\r\n        \"name\": \"GAMPING\"\r\n    },\r\n    \"village\": {\r\n        \"_id\": \"3404050001\",\r\n        \"name\": \"BALECATUR\"\r\n    },\r\n    \"passcode\": 55294\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3001/api/v1/address/new"
+					},
+					"response": []
+				},
+				{
+					"name": "List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3001/api/v1/address/list"
+					},
+					"response": []
+				},
+				{
+					"name": "Detail",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/v1/address/:_id/detail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"address",
+								":_id",
+								"detail"
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": "64cf26b1ba7ece3eb7fedb0c"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"home\",\r\n    \"address\": \"Jl. Test No. 1 RT.002 RW.003\",\r\n    \"province\": {\r\n        \"_id\": \"34\",\r\n        \"name\": \"DI YOGYAKARTA\"\r\n    },\r\n    \"regency\": {\r\n        \"_id\": \"3404\",\r\n        \"name\": \"KABUPATEN SLEMAN\"\r\n    },\r\n    \"district\": {\r\n        \"_id\": \"3404070\",\r\n        \"name\": \"DEPOK\"\r\n    },\r\n    \"village\": {\r\n        \"_id\": \"3404070002\",\r\n        \"name\": \"MAGUWOHARJO\"\r\n    },\r\n    \"passcode\": 55281\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/v1/address/:_id/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"address",
+								":_id",
+								"update"
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": "64cf1d10e3eb207624a4838c"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/v1/address/:_id/destroy",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"v1",
+								"address",
+								":_id",
+								"destroy"
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": "64cf3075b51ce5c94de096b2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
