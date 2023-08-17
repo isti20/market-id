@@ -42,7 +42,7 @@ const registerUser = async (req, res) => {
                 _id: findRole._id,
                 name: findRole.name
             },
-            status: false,
+            status: true,
             token: null,
         }).save();
 
