@@ -9,6 +9,7 @@ import r_categories from "./src/routers/r_categories.js";
 import r_products from "./src/routers/r_products.js";
 import r_checkouts from "./src/routers/r_checkouts.js";
 import r_addresses from "./src/routers/r_addresses.js";
+import r_wilayah from "./src/routers/r_wilayah.js";
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use("/api/v1", r_categories);
 app.use("/api/v1", r_products);
 app.use("/api/v1", r_checkouts);
 app.use("/api/v1", r_addresses);
+app.use("/api/v1", r_wilayah);
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`)
